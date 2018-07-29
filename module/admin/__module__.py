@@ -10,7 +10,6 @@ class Module:
             # This can be changed for role.id or role.permissions
             return "Admin" in [role.name for role in ctx.author.roles]
 
-
         @bot.group(name='admin',
                    help='Set of admin commands',
                    brief='Admin module',
