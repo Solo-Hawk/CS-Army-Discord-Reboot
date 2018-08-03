@@ -25,7 +25,7 @@ class Module:
             :param ctx: context passed by command call
             :return:
             """
-            await ctx.send(bot.latency)
+            await ctx.send(f"{'%.2f' % (bot.latency * 1000)} ms")
 
         @bot.command(name='echo',
                      help='repeats what was passed in the command')

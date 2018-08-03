@@ -1,10 +1,11 @@
 from discord import errors
-from core.discordClient import mdb_client
+from core.discordClient import mdb_client, PluginManager
 
 
 def main():
     try:
         mdb_client.run(open("token.txt", "r").read())
+
     except errors.LoginFailure:
         print("Invalid token in token.txt")
 

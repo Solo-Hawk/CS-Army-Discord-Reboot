@@ -29,5 +29,5 @@ class PluginManager:
             print(foo)
             foo.Module(self.bot)  # Running module class
 
-
 plugin_manager = PluginManager()
+

@@ -1,21 +1,23 @@
+# WORK IN PROGRESS MODULE
+# WORK IN PROGRESS MODULE
+# WORK IN PROGRESS MODULE
+# WORK IN PROGRESS MODULE
+# WORK IN PROGRESS MODULE
 import discord
 from discord.ext import commands
 # standard import for any module
+import core.mdb as mdb
 
 
 class Module:
     def __init__(self, bot: commands.Bot):
-        async def is_admin(ctx: commands.Context):
-            # This will only look for roles that have "admin" in the name.
-            # This can be changed for role.id or role.permissions
-            return "Admin" in [role.name for role in ctx.author.roles]
 
         @bot.group(name='admin',
                    help='Set of admin commands',
                    brief='Admin module',
                    description='Admin module for kicking and banning',
                    usage='[sub command]')
-        @commands.check(is_admin)
+        @commands.check(mdb.is_auth_role)
         async def admin(ctx: commands.Context):
             """
             Primary admin command group, used to call sub commands of the admin group
@@ -23,6 +25,21 @@ class Module:
             :return:
             """
             return
+
+        @admin.command(name='usable',
+                       help='Confirms rights to use admin commands',
+                       brief='Confirms rights',
+                       description='Will return a message stating that you can use admin commands'
+                                   'blank response or errors will mean you cannot')
+        async def _usable(ctx: commands.Context):
+            """
+            Kicks user and provides a reason
+            :param ctx: context passed by command call
+            :param member: targeted member to kick
+            :param reason: reason to kick
+            :return:
+            """
+            await ctx.send("Confirmed")
 
         @admin.command(name='kick',
                        help='kick selected user and provides them the reason',
@@ -32,7 +49,7 @@ class Module:
                                    'This user can be invited via new invite links',
                        usage='[member] reason')
         @commands.has_permissions(kick_members=True)
-        async def kick(ctx: commands.Context, member: discord.Member, reason: str):
+        async def _kick(ctx: commands.Context, member: discord.Member, reason: str):
             """
             Kicks user and provides a reason
             :param ctx: context passed by command call
@@ -50,7 +67,7 @@ class Module:
                                    'until unbanned',
                        usage='[member] reason')
         @commands.has_permissions(ban_members=True)
-        async def ban(ctx: commands.Context, member: discord.Member, reason: str):
+        async def _ban(ctx: commands.Context, member: discord.Member, reason: str):
             """
             Bans user and provides a reason
             :param ctx: context passed by command call
