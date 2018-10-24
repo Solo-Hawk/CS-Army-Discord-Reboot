@@ -17,13 +17,13 @@ def get_guild_role(guild: discord.Guild, role: int):
     return
 
 def get_roles():
-    with open('auth_roles.json') as json_file:
+    with open('core/auth_roles.json') as json_file:
         auth_roles = json.load(json_file)
     return auth_roles["auth_roles"]
 
 
 def save_roles():
-    with open('auth_roles.json', 'w') as outfile:
+    with open('core/auth_roles.json', 'w') as outfile:
         json.dump(auth_roles, outfile)
 
 
