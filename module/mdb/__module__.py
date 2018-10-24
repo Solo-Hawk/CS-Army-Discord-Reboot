@@ -4,6 +4,7 @@ from discord.ext import commands
 import core.mdb as mdb
 
 
+
 class Module:
     def __init__(self, bot: commands.Bot):
         pass
@@ -25,3 +26,5 @@ class Module:
         async def _remove_role(ctx: commands.Context, role: discord.Role):
             mdb.remove_role(str(role.id))
             await ctx.send(f"Role {role} has been removed from auth roles")
+
+

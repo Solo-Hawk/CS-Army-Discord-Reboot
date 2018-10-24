@@ -33,10 +33,8 @@ class Module:
                                    'blank response or errors will mean you cannot')
         async def _usable(ctx: commands.Context):
             """
-            Kicks user and provides a reason
+            Returns if the command is usable
             :param ctx: context passed by command call
-            :param member: targeted member to kick
-            :param reason: reason to kick
             :return:
             """
             await ctx.send("Confirmed")
@@ -57,7 +55,10 @@ class Module:
             :param reason: reason to kick
             :return:
             """
-            await member.send(f"You have been kick by a moderator for the following: `{reason}`")
+            await member.send(f"You have been kick by a moderator for the following: `{reason}`"
+                              f"\n"
+                              f"\n"
+                              f"`If you would like to appeal this kick please message YeetMachine#1337 or akir-#7891`")
             await ctx.message.guild.kick(member, reason=reason)
 
         @admin.command(name='ban',
@@ -75,5 +76,8 @@ class Module:
             :param reason: reason to ban
             :return:
             """
-            await member.send(f"You have been ban by a moderator for the following: `{reason}`")
-            await ctx.send(f"Can Ban {member} for {reason}")
+            await member.send(f"You have been ban by a moderator for the following: `{reason}`"
+                              f"\n"
+                              f"\n"
+                              f"`If you would like to appeal this ban please message YeetMachine#1337 or akir-#7891`")
+            await ctx.message.guild.ban(member, reason=reason)
