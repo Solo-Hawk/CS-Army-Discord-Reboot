@@ -10,6 +10,12 @@ import json
 
 auth_roles = {"auth_roles": []}
 
+def get_guild_role(guild: discord.Guild, role: int):
+    for role in guild.roles:
+        if role.id == role:
+            return role
+    return
+
 def get_roles():
     with open('auth_roles.json') as json_file:
         auth_roles = json.load(json_file)
@@ -17,7 +23,7 @@ def get_roles():
 
 
 def save_roles():
-    with open('active_cases.json', 'w') as outfile:
+    with open('auth_roles.json', 'w') as outfile:
         json.dump(auth_roles, outfile)
 
 

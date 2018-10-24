@@ -64,3 +64,5 @@ contributors\.txt
 venv/
 
 .vs/
+
+\.idea/
