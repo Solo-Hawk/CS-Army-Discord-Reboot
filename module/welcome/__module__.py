@@ -9,7 +9,7 @@ react_messages = {}
 
 def get_reactors():
     global react_messages
-    with open('../module/welcome/config.json') as json_file:
+    with open('module/welcome/config.json') as json_file:
         react_messages = json.load(json_file)
     print(react_messages)
     return react_messages["reactors"]
@@ -17,7 +17,7 @@ def get_reactors():
 
 def save_reactors():
     global react_messages
-    with open('../module/welcome/config.json', 'w') as outfile:
+    with open('module/welcome/config.json', 'w') as outfile:
         json.dump(react_messages, outfile)
 
 
