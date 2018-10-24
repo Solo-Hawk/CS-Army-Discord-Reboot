@@ -20,8 +20,16 @@ class Module:
         async def _debug(ctx: commands.Context, *args):
             await ctx.send(f"```{args}```")
             await ctx.send(f"```{ctx.message}```")
-            await ctx.send(f"{ctx.message.content[len(ctx.invoked_with) + len(ctx.command.name) + 2:]}")
+            await ctx.send(f"{ctx.message.content[len(ctx.invoked_with) + len(ctx.command.name) + 2:]}")\
 
+        @developer.command(name='get_roles')
+        async def _get_roles(ctx: commands.Context, *args):
+            roles = ctx.channel.guild.roles
+            msg = "```\n"
+            for role in roles:
+                msg += role.name + " : " + str(role.id) + "\n"
+            msg += "```"
+            await ctx.send(msg)
         @developer.command(name='say')
         async def _say(ctx: commands.Context, channelID: int, *args):
             channel = bot.get_channel(channelID)
