@@ -60,3 +60,7 @@ target/
 core/token\.txt
 
 contributors\.txt
+
+venv/
+
+.vs/
