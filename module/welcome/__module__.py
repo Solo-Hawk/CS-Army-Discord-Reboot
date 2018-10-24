@@ -86,12 +86,11 @@ class Module:
 
 
         @bot.group(name='welcome')
-        @commands.is_owner()
+        @commands.check(mdb.is_auth_role)
         async def welcome(ctx: commands.Context):
             pass
 
         @welcome.command(name='createReact')
-        @commands.is_owner()
         async def createReact(ctx: commands.Context, channelID: int, *args):
             react_message = {}
             channel = bot.get_channel(channelID)
