@@ -1,8 +1,3 @@
-# WORK IN PROGRESS MODULE
-# WORK IN PROGRESS MODULE
-# WORK IN PROGRESS MODULE
-# WORK IN PROGRESS MODULE
-# WORK IN PROGRESS MODULE
 import discord
 from discord.ext import commands
 # standard import for any module
@@ -19,10 +14,12 @@ def get_cases():
     print(active_cases)
     return active_cases["cases"]
 
+
 def save_cases():
     global active_cases
     with open('module/moddie/active_cases.json', 'w') as outfile:
         json.dump(active_cases, outfile)
+
 
 def add_case(role: int):
     global active_cases
@@ -32,30 +29,34 @@ def add_case(role: int):
     active_cases["cases"].append(role)
     save_cases()
 
+
 def remove_case(role: int):
     global active_cases
     print(f"Moddie - Removed {role}")
     active_cases["cases"].remove(role)
     save_cases()
 
+
 class Module:
 
     def __init__(self, bot: commands.Bot):
+        self.guild = None
+        self.category = None
+        self.role_call = None
 
         def update_config():
             with open('module/moddie/config.json') as json_file:
                 config = json.load(json_file)
             self.guild = bot.get_guild(config["guildid"])
             self.category = bot.get_channel(config["categoryid"])
-            self.rolecall = config["rolecall"]
-
+            self.role_call = config["rolecall"]
 
         @bot.listen('on_ready')
         async def _init():
             update_config()
             print(self.guild)
             print(self.category)
-            print(self.rolecall)
+            print(self.role_call)
             get_cases()
             game = discord.Game(name="dm me $$mod to chat")
             await bot.change_presence(status=discord.Status.online, game=game)
@@ -73,25 +74,37 @@ class Module:
                                            "Please find the channel under the 'Moddie' category")
                 return
 
-            def pred(m: discord.Message):
+            def pred_option(m: discord.Message):
                 return m.author == message.author \
                        and m.channel == message.channel \
                        and (m.content == "y" or m.content == "n")
 
-            await message.channel.send("Would you like to start an admin chat? (y / n)")
-            msg = await bot.wait_for('message', check=pred)
+            await message.channel.send("Would you like to start an admin chat? ('y' / 'n')")
+            msg = await bot.wait_for('message', check=pred_option)
 
             if msg.content == "y":
+                def pred(m: discord.Message):
+                    return m.author == message.author \
+                           and m.channel == message.channel
+
+                await message.channel.send("To start, please say the issue that needs a moderator's attention")
+                msg = await bot.wait_for('message', check=pred)
+
                 user = message.author
                 add_case(user.id)
                 guild = self.guild
+
                 channel = await guild.create_text_channel(name=f"case {user.id}",
                                                           category=self.category,
                                                           reason="Moddie Channel")
                 await channel.set_permissions(message.author, read_messages=True)
                 await channel.edit(topic=f"{user.id}")
-                await channel.send(f"<@&{self.rolecall}> {user.mention}")
-                await message.channel.send("A chat has been created with the moderators in CS Army")
+                await channel.send(f"<@&{self.role_call}> \n {user.mention} : {msg.content}")
+
+                invite = await channel.create_invite(max_age=10,
+                                                     max_uses=1)
+
+                await message.channel.send(f"A chat has been created with the moderators in CS Army \n {invite.url}")
             else:
                 await message.channel.send("Okay, will not start an admin chat")
 
@@ -110,9 +123,9 @@ class Module:
             return
 
         @moddie.command(name='end',
-                       help='Ends discussion thread in moddie',
-                       brief='End thread',
-                       description='Will close the channel')
+                        help='Ends discussion thread in moddie',
+                        brief='End thread',
+                        description='Will close the channel')
         async def _end(ctx: commands.Context):
             """
             Deletes the discussion thread between moderators and user
@@ -129,8 +142,3 @@ class Module:
             await ctx.send("Removing Channel")
             remove_case(int(ctx.channel.topic))
             await ctx.channel.delete(reason="Thread Ended")
-
-
-
-
-
