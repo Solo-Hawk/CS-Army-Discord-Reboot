@@ -14,14 +14,14 @@ active_cases = {}
 
 def get_cases():
     global active_cases
-    with open('../module/moddie/active_cases.json') as json_file:
+    with open('module/moddie/active_cases.json') as json_file:
         active_cases = json.load(json_file)
     print(active_cases)
     return active_cases["cases"]
 
 def save_cases():
     global active_cases
-    with open('../module/moddie/active_cases.json', 'w') as outfile:
+    with open('module/moddie/active_cases.json', 'w') as outfile:
         json.dump(active_cases, outfile)
 
 def add_case(role: int):
@@ -43,7 +43,7 @@ class Module:
     def __init__(self, bot: commands.Bot):
 
         def update_config():
-            with open('../module/moddie/config.json') as json_file:
+            with open('module/moddie/config.json') as json_file:
                 config = json.load(json_file)
             self.guild = bot.get_guild(config["guildid"])
             self.category = bot.get_channel(config["categoryid"])

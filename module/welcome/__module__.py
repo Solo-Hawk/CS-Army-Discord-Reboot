@@ -9,7 +9,7 @@ react_messages = {}
 
 def get_reactors():
     global react_messages
-    with open('../module/welcome/config.json') as json_file:
+    with open('module/welcome/config.json') as json_file:
         react_messages = json.load(json_file)
     print(react_messages)
     return react_messages["reactors"]
@@ -17,7 +17,7 @@ def get_reactors():
 
 def save_reactors():
     global react_messages
-    with open('../module/welcome/config.json', 'w') as outfile:
+    with open('module/welcome/config.json', 'w') as outfile:
         json.dump(react_messages, outfile)
 
 
@@ -81,17 +81,26 @@ class Module:
             print(role)
             await member.remove_roles(role)
 
-
-
-
-
         @bot.group(name='welcome')
-        @commands.is_owner()
+        @commands.check(mdb.is_auth_role)
         async def welcome(ctx: commands.Context):
             pass
 
-        @welcome.command(name='createReact')
-        @commands.is_owner()
+        @welcome.command(name='create_message')
+        async def createReact(ctx: commands.Context, channelID: int, *args):
+            channel = bot.get_channel(channelID)
+            message = ctx.message
+
+            def pred(m: discord.Message):
+                return m.author == message.author \
+                       and m.channel == message.channel
+
+            await message.channel.send("Provide Message")
+            msg = await bot.wait_for('message', check=pred)
+
+            message = await channel.send(msg.content)
+
+        @welcome.command(name='create_reactor')
         async def createReact(ctx: commands.Context, channelID: int, *args):
             react_message = {}
             channel = bot.get_channel(channelID)
@@ -124,6 +133,7 @@ class Module:
                 def pred_newreact(m: discord.Message):
                     print(m)
                     return m.content == "y" or m.content == "n"
+
                 reactor = {}
                 mes = await ctx.send(">> React to this <<")
 
@@ -147,7 +157,6 @@ class Module:
                 if mes_repeat.content == "y":
                     await ctx.send("Repeating")
                     await add_reacts()
-
 
             await add_reacts()
 

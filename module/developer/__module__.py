@@ -12,26 +12,31 @@ class Module:
 
         @bot.group(name='dev',
                    aliases=['developer'])
-        @commands.is_owner()
+        @commands.check(mdb.is_auth_role)
         async def developer(ctx: commands.Context):
             pass
 
         @developer.command(name='debug')
-        @commands.is_owner()
         async def _debug(ctx: commands.Context, *args):
             await ctx.send(f"```{args}```")
             await ctx.send(f"```{ctx.message}```")
-            await ctx.send(f"{ctx.message.content[len(ctx.invoked_with) + len(ctx.command.name) + 2:]}")
+            await ctx.send(f"{ctx.message.content[len(ctx.invoked_with) + len(ctx.command.name) + 2:]}")\
 
+        @developer.command(name='get_roles')
+        async def _get_roles(ctx: commands.Context, *args):
+            roles = ctx.channel.guild.roles
+            msg = "```\n"
+            for role in roles:
+                msg += role.name + " : " + str(role.id) + "\n"
+            msg += "```"
+            await ctx.send(msg)
         @developer.command(name='say')
-        @commands.is_owner()
         async def _say(ctx: commands.Context, channelID: int, *args):
             channel = bot.get_channel(channelID)
             shift = len(ctx.invoked_with) + len(ctx.command.name) + len(str(channelID)) + 5
             await channel.send(f"{ctx.message.content[shift:]}")
 
         @developer.command(name='say_emoji')
-        @commands.is_owner()
         async def _say_emoji(ctx: commands.Context):
             message = await ctx.send(">> React to this <<")
 

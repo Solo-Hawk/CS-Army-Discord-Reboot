@@ -4,7 +4,7 @@ from core.discordClient import mdb_client, PluginManager
 
 def main():
     try:
-        mdb_client.run(open("token.txt", "r").read())
+        mdb_client.run(open("core/token.txt", "r").read())
 
     except errors.LoginFailure:
         print("Invalid token in token.txt")

@@ -17,13 +17,13 @@ def get_guild_role(guild: discord.Guild, role: int):
     return
 
 def get_roles():
-    with open('auth_roles.json') as json_file:
+    with open('core/auth_roles.json') as json_file:
         auth_roles = json.load(json_file)
     return auth_roles["auth_roles"]
 
 
 def save_roles():
-    with open('auth_roles.json', 'w') as outfile:
+    with open('core/auth_roles.json', 'w') as outfile:
         json.dump(auth_roles, outfile)
 
 
@@ -46,6 +46,7 @@ def is_auth_role(ctx: commands.Context):
     check = False
     for roleid in get_roles():  # Iterator through all auth_roles saved in mdb config
         for role in ctx.author.roles:
+            print(role.name)
             print(roleid, "  :  ", role.id)
         if roleid in [role.id for role in ctx.author.roles]:
             return True  # Match found
