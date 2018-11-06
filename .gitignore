@@ -66,3 +66,5 @@ venv/
 \.idea/
 
 core/token\.txt
+
+core/token list

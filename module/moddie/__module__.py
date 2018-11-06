@@ -3,9 +3,10 @@ from discord.ext import commands
 # standard import for any module
 import core.mdb as mdb
 import json
+import re
 
 active_cases = {}
-
+linksToCheck = ['twitch', 'youtube', '.org', 'kickstarter', 'gofundme', 'blog.']
 
 def get_cases():
     global active_cases
@@ -43,6 +44,7 @@ class Module:
         self.guild = None
         self.category = None
         self.role_call = None
+        self.main_channel = None
 
         def update_config():
             with open('module/moddie/config.json') as json_file:
@@ -50,6 +52,7 @@ class Module:
             self.guild = bot.get_guild(config["guildid"])
             self.category = bot.get_channel(config["categoryid"])
             self.role_call = config["rolecall"]
+            self.main_channel = config["main"]
 
         @bot.listen('on_ready')
         async def _init():
@@ -57,9 +60,39 @@ class Module:
             print(self.guild)
             print(self.category)
             print(self.role_call)
+            print(self.main_channel)
             get_cases()
             game = discord.Game(name="dm me $$mod to chat")
             await bot.change_presence(status=discord.Status.online, game=game)
+
+        @bot.listen('on_message')
+        async def message_received(message: discord.Message):
+            if message.author.bot:
+                return
+            if not type(message.channel) == discord.TextChannel:
+                return
+            if not message.channel.guild == self.guild:
+                return
+            promote_flag = False
+            text = message.content
+            urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', text)
+            if not len(urls) > 0:
+                return
+            for url in urls:
+                if any(link in url for link in linksToCheck):
+                    promote_flag = True
+            channel = bot.get_channel(self.main_channel)
+            print("Noticed")
+            if promote_flag:
+                await channel.send(f"<@&{self.role_call}> potential promotional link noticed \n"
+                                   f"Message ID: {message.id}\n"
+                                   f"Message Content: \n `{message.content}`\n"
+                                   f"Message Channel: <#{message.channel.id}>")
+            else:
+                await channel.send(f"link noticed \n"
+                                   f"Message ID: {message.id}\n"
+                                   f"Message Content: `{message.content}`"
+                                   f"Message Channel: <#{message.channel.id}>")
 
         @bot.listen('on_message')
         async def message_received(message: discord.Message):
@@ -87,7 +120,7 @@ class Module:
                     return m.author == message.author \
                            and m.channel == message.channel
 
-                await message.channel.send("To start, please say the issue that needs a moderator's attention")
+                await message.channel.send("To start, please state your issue/query that needs a moderator's attention")
                 msg = await bot.wait_for('message', check=pred)
 
                 user = message.author
