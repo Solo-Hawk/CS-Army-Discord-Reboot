@@ -241,6 +241,7 @@ class Module:
                 if mes_repeat.content == "y":
                     await ctx.send("Repeating")
                     await add_reacts()
+            add_reacts()
 
             pass
             # channel = bot.get_channel(channelID)
