@@ -83,16 +83,32 @@ class Module:
                     promote_flag = True
             channel = bot.get_channel(self.main_channel)
             print("Noticed")
+            print(discord.version_info)
+            print(discord.__version__)
             if promote_flag:
-                await channel.send(f"<@&{self.role_call}> potential promotional link noticed \n"
-                                   f"Message ID: {message.id}\n"
-                                   f"Message Content: \n `{message.content}`\n"
-                                   f"Message Channel: <#{message.channel.id}>")
+                embed = discord.Embed(title="Promotion Link Noticed",
+                                      type="rich",
+                                      description="A web URL has been noticed",
+                                      color=0xFF0000
+                                      )
             else:
-                await channel.send(f"link noticed \n"
-                                   f"Message ID: {message.id}\n"
-                                   f"Message Content: `{message.content}`"
-                                   f"Message Channel: <#{message.channel.id}>")
+                embed = discord.Embed(title="Link Noticed",
+                                      type="rich",
+                                      description="A web URL has been noticed",
+                                      color=0xFFFF00
+                                      )
+
+            embed.add_field(name="Message Author", value=message.author.name)
+            embed.add_field(name="Message Discriminator", value=message.author.name)
+            embed.add_field(name="Message Nick", value=message.author.nick)
+            embed.add_field(name="Message Author ID", value=message.author.id)
+            embed.add_field(name="Message ID", value=message.id)
+            embed.add_field(name="Message Channel", value=message.channel.name)
+            embed.add_field(name="Message Channel ID", value=message.channel.id)
+            embed.set_footer(text="Message Content Below")
+
+            await channel.send(embed=embed)
+            await channel.send(content=f"{message.content}")
 
         @bot.listen('on_message')
         async def message_received(message: discord.Message):
