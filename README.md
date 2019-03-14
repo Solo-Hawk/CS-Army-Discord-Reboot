@@ -4,6 +4,8 @@ This is the reboot of the reboot. It is written using a more up-to-date implemen
 
 Please give me feedback as I am pretty new to this type of project.
 
+NOTE: When using this ensure to edit config with welcome_id and auth_ids
+
 ## I want to help
 
 If you're seeing this straight from my Github profile, then to help understand, this bot serves a discord server know as CS Army. This server was created by Devon Crawford - [YouTube](https://www.youtube.com/channel/UCDrekHmOnkptxq3gUU0IyfA) to help bring programmers together.

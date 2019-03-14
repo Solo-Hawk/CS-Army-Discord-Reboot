@@ -1,12 +1,10 @@
 from discord.ext import commands
-import json
-
+from core.general_functions import update_config, load_config
 
 class OwnerCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        with open("core/configs.json") as r:
-            self.configs = json.load(r)
+        self.configs = load_config()
 
     @commands.command(name='load', hidden=True)
     async def cog_load(self, ctx, *, cog: str):
@@ -20,9 +18,7 @@ class OwnerCog(commands.Cog):
             else:
                 await ctx.send(f'Successfully Loaded: {cog}')
                 self.configs['extensions'].append(cog)
-
-                with open('core/configs.json', 'w') as r:
-                    json.dump(self.configs, r)
+                update_config(self.configs)
 
     @commands.command(name='unload', hidden=True)
     async def cmd_cog_unload(self, ctx, *, cog: str):
@@ -36,14 +32,12 @@ class OwnerCog(commands.Cog):
             else:
                 await ctx.send(f'Successfully Unloaded: {cog}')
                 self.configs['extensions'].remove(cog)
-
-                with open('core/configs.json', 'w') as r:
-                    json.dump(self.configs, r)
+                update_config(self.configs)
 
     @commands.command(name='reload', hidden=True)
     async def cog_reload(self, ctx, *, cog: str):
-            """Unloads and Reloads a Module. 
-            Remember to use dot path. e.g: cogs.owner"""
+        """Unloads and Reloads a Module.
+        Remember to use dot path. e.g: cogs.owner"""
         if self.check_auth(ctx.author.id):
             try:
                 self.bot.unload_extension(cog)

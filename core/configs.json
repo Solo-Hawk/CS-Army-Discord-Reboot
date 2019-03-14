@@ -1,1 +1,1 @@
-{"prefix": "$$", "auth_ids": [252600343425318912, 472945647260270622, 438781995368185858], "extensions": ["cogs.owner"]}
+{"prefix": "$$", "auth_ids": [252600343425318912, 472945647260270622, 438781995368185858], "extensions": ["cogs.owner", "cogs.welcome", "cogs.general"], "welcome_id": 555569740798623745}

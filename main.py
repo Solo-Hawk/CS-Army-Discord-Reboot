@@ -1,11 +1,11 @@
 from discord.ext import commands
 import discord
 import asyncio
-import json
+from core.general_functions import load_config
 import sys
 
-with open('core/configs.json') as r:
-    configs = json.load(r)
+
+configs = load_config()
 
 extensions = configs["extensions"]
 
@@ -14,8 +14,7 @@ bot = commands.Bot(command_prefix=configs["prefix"])
 
 @bot.event
 async def on_ready():
-    print(
-        f'\n\nLogged in as: {bot.user.name} - {bot.user.id}\nVersion: {discord.__version__}\n')
+    print(f'\n\nLogged in as: {bot.user.name} - {bot.user.id}\nVersion: {discord.__version__}\n')
 
 
 if __name__ == '__main__':
