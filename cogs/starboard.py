@@ -9,7 +9,7 @@ class StarboardCog(commands.Cog):
         self.config = load_config()
 
     @commands.Cog.listener()
-    async def on_reaction_add(self, reaction, user):
+    async def on_reaction_add(self, reaction, user):  # THIS NEEDS CLEANED UP
         if str(reaction.message.guild.id) in self.config["guilds"]:  # Checks that guild has starboard configured
             if str(ord(reaction.emoji)) in self.config["starboard_emojis"]:  # if new reaction is a star
                 total_stars = 0
