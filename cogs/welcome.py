@@ -24,7 +24,9 @@ class WelcomeCog(commands.Cog):
     @commands.command(name="set_welcome")
     async def set_welcome_channel(self, ctx, channel: commands.TextChannelConverter):
         """Given a channel it updates the welcome for that guild"""
-        self.configs["guilds"][str(channel.guild.id)] = {"welcome_id": str(channel.id)}
+        if not str(ctx.message.guild.id) in self.configs["guilds"]:
+            self.configs["guilds"][str(ctx.message.guild.id)] = {}
+        self.configs["guilds"][str(channel.guild.id)]["welcome_id"] = str(channel.id)
         update_config(self.configs)
         await ctx.send(f'Welcome channel updated to: {channel.name}')
 
