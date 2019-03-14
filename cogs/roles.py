@@ -2,6 +2,10 @@ from discord.ext import commands
 from core.general_functions import load_config, update_config
 
 
+# WIP THIS IS NOT FUNCTIONAL
+# WIP THIS IS NOT FUNCTIONAL
+# WIP THIS IS NOT FUNCTIONAL
+# WIP THIS IS NOT FUNCTIONAL
 class RolesCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
