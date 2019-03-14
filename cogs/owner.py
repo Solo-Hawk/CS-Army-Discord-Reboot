@@ -19,7 +19,7 @@ class OwnerCog(commands.Cog):
                 await ctx.send(f'Error: {type(e).__name__} - {e}')
             else:
                 await ctx.send(f'Successfully Loaded: {cog}')
-                self.configs['extensions'].add(cog)
+                self.configs['extensions'].append(cog)
 
                 with open('core/configs.json', 'w') as r:
                     json.dump(self.configs, r)
