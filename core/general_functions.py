@@ -19,4 +19,3 @@ def has_auth():
         return ctx.message.author.id in config["auth_ids"]
 
     return commands.check(predicate)
-
