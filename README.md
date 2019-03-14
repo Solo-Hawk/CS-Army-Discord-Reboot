@@ -27,6 +27,6 @@ The bot repo isn't fully set up to be effective with people forking just yet, bu
     - Some sort of logging?
     - Server Stats
 + Refactor Files and Variables, make naming clear
-    - Improve Welcome and Starboard. Commands functional but need refactored  
+    - Improve Starboard. Commands functional but need refactored and made more readable 
 + More Configs and way to store data for multiple servers  
 
