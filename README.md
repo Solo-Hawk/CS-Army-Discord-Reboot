@@ -24,6 +24,7 @@ The bot repo isn't fully set up to be effective with people forking just yet, bu
     - <del>Welcome Message</del>
     - Improved Suggestions  
     - Votes  
+    - Some sort of logging?
 + Refactor Files and Variables, make naming clear  
 + More Configs and way to store data for multiple servers  
 
