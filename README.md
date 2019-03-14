@@ -16,6 +16,7 @@ The bot repo isn't fully set up to be effective with people forking just yet, bu
 
 ## Task List
 
++ ERROR HANDLING  
 + Streamline Classes to make more readable  
 + Add Modules for more functionality    
     - <del>Starboard</del>      
