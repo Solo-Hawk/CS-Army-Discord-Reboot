@@ -1,4 +1,5 @@
 import json
+from discord.ext import commands
 
 
 def load_config():
@@ -11,7 +12,11 @@ def update_config(new_config):
         json.dump(new_config, w)
 
 
-def check_auth(ctx):
-    if ctx.message.author.id in load_config():
-        return True
-    return False
+def has_auth():
+    config = load_config()
+
+    def predicate(ctx):
+        return ctx.message.author.id in config["auth_ids"]
+
+    return commands.check(predicate)
+
