@@ -10,16 +10,14 @@ class StarboardCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):  # THIS NEEDS CLEANED UP
-        if str(reaction.message.guild.id) in self.configs["guilds"]:  # Checks that guild has starboard configured
-            if str(ord(reaction.emoji)) in self.configs["starboard_emojis"]:  # if new reaction is a star
-                total_stars = 0
+            total_stars = 0
+            if reaction.emoji in ["⭐", "🌟"] and "starboard_min" in self.configs["guilds"][str(reaction.message.guild.id)].keys():
                 for r in reaction.message.reactions:
-                    if str(ord(r.emoji)) in self.configs["starboard_emojis"]:  # loops through each reaction and checks if it is a star
+                    if str(r.emoji) in ["⭐", "🌟"]:  # loops through each reaction and checks if it is a star
                         total_stars += r.count  # if reaction is a star we add the count to total
                 if total_stars >= int(self.configs["guilds"][str(reaction.message.guild.id)]["starboard_min"]):  # if count is bigger then min we send it to starboard
-                    embed = discord.Embed(title="⭐ Starboard ⭐", color=13103696)
-                    embed.add_field(value=reaction.message.content)
-                    embed.set_author(name=reaction.message.author)
+                    embed = discord.Embed(title="⭐ Starboard ⭐", color=13103696, description=reaction.message.content)
+                    embed.set_footer(text=f"Author: {reaction.message.author}", icon_url=reaction.message.author.avatar_url)
                     await self.bot.get_channel(
                         int(self.configs["guilds"][str(reaction.message.guild.id)]["starboard_id"])).send(embed=embed)
 
@@ -27,9 +25,13 @@ class StarboardCog(commands.Cog):
     @commands.command(name="setup_starboard")
     async def setup_starboard(self, ctx, channel: commands.TextChannelConverter, min_stars):
         """Setup starboard. Usage: setup_starboard channel min_stars"""
+        if not str(ctx.message.guild.id) in self.configs["guilds"]:
+            self.configs["guilds"][str(ctx.message.guild.id)] = {}
         self.configs["guilds"][str(ctx.message.guild.id)]["starboard_id"] = str(channel.id)
         self.configs["guilds"][str(ctx.message.guild.id)]["starboard_min"] = min_stars
         update_config(self.configs)
+
+        await ctx.send("Starboard Setup")
 
 
 def setup(bot):
