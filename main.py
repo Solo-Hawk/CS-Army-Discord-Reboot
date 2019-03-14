@@ -4,9 +4,12 @@ from core.general_functions import load_config
 
 configs = load_config()
 
-extensions = configs["extensions"]
 
-bot = commands.Bot(command_prefix=configs["prefix"])
+async def get_prefix(bot, message):
+    configs = load_config()
+    return configs["prefix"]
+
+bot = commands.Bot(command_prefix=get_prefix)
 
 
 @bot.event
@@ -15,7 +18,7 @@ async def on_ready():
 
 
 if __name__ == '__main__':
-    for extension in extensions:
+    for extension in configs["extensions"]:
         try:
             bot.load_extension(extension)
             print(f'Successfully Loaded {extension}')

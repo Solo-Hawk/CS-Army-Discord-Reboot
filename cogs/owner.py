@@ -70,6 +70,14 @@ class OwnerCog(commands.Cog):
             except Exception as e:
                 await ctx.send(f'Failed to reload {extension} Error: {str(e)}')
 
+    @has_auth()
+    @commands.command(name="set_prefix", hidden=True)
+    async def set_prefix(self, ctx, prefix):
+        self.configs["prefix"] = prefix
+        update_config(self.configs)
+        await ctx.send(f"Prefix updated to {prefix}")
+
+
 
 def setup(bot):
     bot.add_cog(OwnerCog(bot))
