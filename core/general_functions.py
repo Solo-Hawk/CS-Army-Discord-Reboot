@@ -9,7 +9,7 @@ def load_config():
 
 def update_config(new_config):
     with open('core/configs.json', 'w') as w:
-        json.dump(new_config, w)
+        json.dump(new_config, w, indent=4, sort_keys=True)
 
 
 def has_auth():
