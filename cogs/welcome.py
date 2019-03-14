@@ -1,6 +1,6 @@
 from discord.ext import commands
 import discord
-from core.general_functions import load_config
+from core.general_functions import load_config, update_config
 
 
 class WelcomeCog(commands.Cog):
@@ -18,6 +18,13 @@ class WelcomeCog(commands.Cog):
     async def on_member_remove(self, member):
         embed = discord.Embed(title="Goodbye", description=f'{member.name} has Left the Server!', color=16713287)
         await self.welcome_channel.send(embed=embed)
+
+    @commands.has_permissions(administrator=True)
+    @commands.command(name="set_welcome")
+    async def set_welcome_channel(self, ctx, channel: commands.TextChannelConverter):
+        self.configs["welcome_id"] = channel.id
+        update_config(self.configs)
+        await ctx.send(f'Welcome channel updated to: {channel.name}')
 
 
 def setup(bot):
