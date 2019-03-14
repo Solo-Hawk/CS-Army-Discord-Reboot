@@ -18,7 +18,7 @@ The bot repo isn't fully set up to be effective with people forking just yet, bu
 
 + Streamline Classes to make more readable  
 + Add Modules for more functionality    
-    - Starboard    
+    - <del>Starboard</del>      
     - Auto-Assign Roles  
     - Moderation (Kick, Ban, etc)  
     - <del>Welcome Message</del>
@@ -26,6 +26,7 @@ The bot repo isn't fully set up to be effective with people forking just yet, bu
     - Votes  
     - Some sort of logging?
     - Server Stats
-+ Refactor Files and Variables, make naming clear  
++ Refactor Files and Variables, make naming clear
+    - Improve Welcome and Starboard. Commands functional but need refactored  
 + More Configs and way to store data for multiple servers  
 
