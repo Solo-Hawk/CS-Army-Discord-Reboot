@@ -42,6 +42,8 @@ class OwnerCog(commands.Cog):
 
     @commands.command(name='reload', hidden=True)
     async def cog_reload(self, ctx, *, cog: str):
+            """Unloads and Reloads a Module. 
+            Remember to use dot path. e.g: cogs.owner"""
         if self.check_auth(ctx.author.id):
             try:
                 self.bot.unload_extension(cog)
@@ -53,7 +55,7 @@ class OwnerCog(commands.Cog):
 
     @commands.command(name='list_cogs', hidden=True)
     async def list_cogs(self, ctx):
-        """Command which lists the cogs"""
+        """Command which lists all cogs"""
         if self.check_auth(ctx.author.id):
             cogs = self.bot.cogs
             for cog_class, cog_name in cogs.items():
