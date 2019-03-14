@@ -20,14 +20,14 @@ The bot repo isn't fully set up to be effective with people forking just yet, bu
 
 ## Task List
 
-[ ] - Streamline Classes to make more readable  
-[ ] - Add Modules for more functionality    
-        - Starboard    
-        - Auto-Assign Roles  
-        - Moderation (Kick, Ban, etc)  
-        - Welcome Message  
-        - Improved Suggestions  
-        - Votes  
-[ ] - Refactor Files and Variables, make naming clear  
-[ ] - More Configs and way to store data for multiple servers  
++ Streamline Classes to make more readable  
++ Add Modules for more functionality    
+    - Starboard    
+    - Auto-Assign Roles  
+    - Moderation (Kick, Ban, etc)  
+    - Welcome Message  
+    - Improved Suggestions  
+    - Votes  
++ Refactor Files and Variables, make naming clear  
++ More Configs and way to store data for multiple servers  
 
