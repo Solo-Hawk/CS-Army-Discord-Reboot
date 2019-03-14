@@ -20,10 +20,6 @@ The bot repo isn't fully set up to be effective with people forking just yet, bu
 
 ## Task List
 
-[x] - Deploy basic build of MDB 
-[x] - Deploy basic build of CS Army Bot
-[x] - Make better branch names (Development and Deployment look too similar when I'm tired)
+[ ] - Streamline Classes to make more readable
+[ ] - Add Modules for more functionality
 [ ] - Refactor Files and Variables, make naming clear
-[ ] - Commenting and sorting WIP modules
-[ ] - Building module template
-[ ] - Bot support multi-server
