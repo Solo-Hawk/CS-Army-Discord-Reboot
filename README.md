@@ -21,7 +21,7 @@ The bot repo isn't fully set up to be effective with people forking just yet, bu
     - Starboard    
     - Auto-Assign Roles  
     - Moderation (Kick, Ban, etc)  
-    - Welcome Message  
+    - <del>Welcome Message</del>
     - Improved Suggestions  
     - Votes  
 + Refactor Files and Variables, make naming clear  
