@@ -1,9 +1,6 @@
 from discord.ext import commands
 import discord
-import asyncio
 from core.general_functions import load_config
-import sys
-
 
 configs = load_config()
 
@@ -24,7 +21,6 @@ if __name__ == '__main__':
             print(f'Successfully Loaded {extension}')
         except Exception as e:
             print(f'Failed to load {extension} Error: {str(e)}')
-
 
 token = open('core/token.txt').read()
 bot.run(token)
