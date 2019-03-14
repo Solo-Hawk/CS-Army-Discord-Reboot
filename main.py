@@ -18,11 +18,6 @@ async def on_ready():
         f'\n\nLogged in as: {bot.user.name} - {bot.user.id}\nVersion: {discord.__version__}\n')
 
 
-@bot.command(name="kill", hidden=True, pass_context=True)
-async def kill(ctx):
-    if ctx.author.id in configs["auth_ids"]:
-        sys.exit()
-
 if __name__ == '__main__':
     for extension in extensions:
         try:
