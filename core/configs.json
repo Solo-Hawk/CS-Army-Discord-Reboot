@@ -7,15 +7,22 @@
     "extensions": [
         "cogs.owner",
         "cogs.general",
-        "cogs.welcome"
+        "cogs.welcome",
+        "cogs.starboard"
     ],
-    "prefix": "$$",
     "guilds": {
         "409209966591868940": {
+            "starboard_id": "",
             "welcome_id": "555623885790511136"
         },
         "443932493033373707": {
-            "welcome_id": "555569740798623745"
+            "starboard_id": "555642109521166347",
+            "starboard_min": "1"
         }
-    }
+    },
+    "prefix": "$$",
+    "starboard_emojis": [
+        "11088",
+        "127775"
+    ]
 }
