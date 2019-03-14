@@ -1,14 +1,36 @@
-from discord import errors
-from core.discordClient import mdb_client, PluginManager
+from discord.ext import commands
+import discord
+import asyncio
+import json
+import sys
+
+with open('core/configs.json') as r:
+    configs = json.load(r)
+
+extensions = configs["extensions"]
+
+bot = commands.Bot(command_prefix=configs["prefix"])
 
 
-def main():
-    try:
-        mdb_client.run(open("core/token.txt", "r").read())
+@bot.event
+async def on_ready():
+    print(
+        f'\n\nLogged in as: {bot.user.name} - {bot.user.id}\nVersion: {discord.__version__}\n')
 
-    except errors.LoginFailure:
-        print("Invalid token in token.txt")
 
+@bot.command(name="kill", hidden=True, pass_context=True)
+async def kill(ctx):
+    if ctx.author.id in configs["auth_ids"]:
+        sys.exit()
 
 if __name__ == '__main__':
-    main()
+    for extension in extensions:
+        try:
+            bot.load_extension(extension)
+            print(f'Successfully Loaded {extension}')
+        except Exception as e:
+            print(f'Failed to load {extension} Error: {str(e)}')
+
+
+token = open('core/token.txt').read()
+bot.run(token)
