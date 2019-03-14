@@ -8,20 +8,34 @@
         "cogs.owner",
         "cogs.general",
         "cogs.welcome",
-        "cogs.starboard"
+        "cogs.starboard",
+        "cogs.roles"
     ],
     "guilds": {
         "409209966591868940": {
+            "auto_role_channel": "555623885790511136",
+            "auto_role_message": "This is my message",
+            "auto_role_message_id": "555880725853896705",
+            "auto_role_reactors": [
+                [
+                    409794042566803457,
+                    409566844043788308
+                ]
+            ],
             "welcome_id": "555623885790511136"
         },
         "443932493033373707": {
+            "auto_role_channel": "555569740798623745",
+            "auto_role_message": "Click an emoji to get a role",
+            "auto_role_reactors": [
+                [
+                    555793437828579328,
+                    555793477837914112
+                ]
+            ],
             "starboard_id": "555642109521166347",
             "starboard_min": "1"
         }
     },
-    "prefix": "$$",
-    "starboard_emojis": [
-        "11088",
-        "127775"
-    ]
+    "prefix": "$$"
 }
