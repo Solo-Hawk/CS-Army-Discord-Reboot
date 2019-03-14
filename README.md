@@ -30,4 +30,5 @@ The bot repo isn't fully set up to be effective with people forking just yet, bu
 + Refactor Files and Variables, make naming clear
     - Improve Starboard. Commands functional but need refactored and made more readable 
 + More Configs and way to store data for multiple servers  
++ Update to use a database instead of a json file
 
