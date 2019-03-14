@@ -10,17 +10,18 @@ class StarboardCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
-        if str(reaction.message.guild.id) in self.config["guilds"]:
-            if str(ord(reaction.emoji)) in self.config["starboard_emojis"]:
+        if str(reaction.message.guild.id) in self.config["guilds"]:  # Checks that guild has starboard configured
+            if str(ord(reaction.emoji)) in self.config["starboard_emojis"]:  # if new reaction is a star
                 total_stars = 0
                 for r in reaction.message.reactions:
-                    if str(ord(r.emoji)) in self.config["starboard_emojis"]:
-                        total_stars += r.count
-                if total_stars >= int(self.config["guilds"][str(reaction.message.guild.id)]["starboard_min"]):
+                    if str(ord(r.emoji)) in self.config["starboard_emojis"]:  # loops through each reaction and checks if it is a star
+                        total_stars += r.count  # if reaction is a star we add the count to total
+                if total_stars >= int(self.config["guilds"][str(reaction.message.guild.id)]["starboard_min"]):  # if count is bigger then min we send it to starboard
                     embed = discord.Embed(title="⭐ Starboard ⭐", color=13103696)
                     embed.add_field(value=reaction.message.content)
                     embed.set_author(name=reaction.message.author)
-                    await self.bot.get_channel(int(self.config["guilds"][str(reaction.message.guild.id)]["starboard_id"])).send(embed=embed)
+                    await self.bot.get_channel(
+                        int(self.config["guilds"][str(reaction.message.guild.id)]["starboard_id"])).send(embed=embed)
 
     @commands.has_permissions(administrator=True)
     @commands.command(name="setup_starboard")
