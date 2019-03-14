@@ -1,14 +1,8 @@
 # CS Army Discord Reboot
 
-Since keeping this project dormant for a while I needed to just reach a point where my overall productivity went up before actually doing anything, this mainly started with my Uni work and slowly leaked into other areas. Thanks to this I finally made a deployable version of the bot. 
+This is the reboot of the reboot. It is written using a more up-to-date implementation of cogs and extensions.
 
-The current set of issues is with modularity, downtimes and updates. Also being able to trying to push fixes without distrupting the bot's uptime, evern for a few seconds.
-
-I basically celotaped a quick working version, making it easier to do things now.
-
-During this time I will doing a lot of fixes and cleaning up code, making some methods more efficient and seeing where I can improve on using better 'models'
-
-For me it has been a very long while since I have done some larger projects but starting small I'm going to be working up again.
+Please give me feedback as I am pretty new to this type of project.
 
 ## I want to help
 
