@@ -14,12 +14,16 @@
     "guilds": {
         "409209966591868940": {
             "auto_role_channel": "555623885790511136",
-            "auto_role_message": "This is my message",
-            "auto_role_message_id": "555880725853896705",
+            "auto_role_message": "my message",
+            "auto_role_message_id": "555935656874868738",
             "auto_role_reactors": [
                 [
                     409794042566803457,
                     409566844043788308
+                ],
+                [
+                    555932737085898773,
+                    409221127689338881
                 ]
             ],
             "welcome_id": "555623885790511136"

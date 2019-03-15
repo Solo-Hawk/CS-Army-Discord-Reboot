@@ -2,20 +2,25 @@ from discord.ext import commands
 from core.general_functions import load_config, update_config
 
 
-# WIP THIS IS NOT FUNCTIONAL
-# WIP THIS IS NOT FUNCTIONAL
-# WIP THIS IS NOT FUNCTIONAL
-# WIP THIS IS NOT FUNCTIONAL
+# WIP. Functional but only with custom emojis
+# Add support for unicode emojis
 class RolesCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.configs = load_config()
 
     @commands.Cog.listener()
-    async def on_reaction_add(self, reaction, user):
-        if str(reaction.message.id) == self.configs["guilds"][str(reaction.message.guild.id)]["auto_role_message_id"]:
+    async def on_reaction_remove(self, reaction, user):
+        if str(reaction.message.id) == self.configs["guilds"][str(reaction.message.guild.id)]["auto_role_message_id"] and not user.bot:
             for reactor in self.configs["guilds"][str(reaction.message.guild.id)]["auto_role_reactors"]:
-                if reaction.emoji.id == int(reactor[0]) and user.id is not self.bot.id:
+                if reaction.emoji.id == int(reactor[0]):
+                    await user.remove_roles(reaction.message.guild.get_role(int(reactor[1])))
+
+    @commands.Cog.listener()
+    async def on_reaction_add(self, reaction, user):
+        if str(reaction.message.id) == self.configs["guilds"][str(reaction.message.guild.id)]["auto_role_message_id"] and not user.bot:
+            for reactor in self.configs["guilds"][str(reaction.message.guild.id)]["auto_role_reactors"]:
+                if reaction.emoji.id == int(reactor[0]):
                     await user.add_roles(reaction.message.guild.get_role(int(reactor[1])))
 
     @commands.has_permissions(administrator=True)
