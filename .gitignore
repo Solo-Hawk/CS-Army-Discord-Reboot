@@ -65,7 +65,6 @@ venv/
 
 \.idea/
 
-core/token\.txt
-
-core/token list
-*.json
+core/token.txt
+core/config.json
+core/guild_data.json
