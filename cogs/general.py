@@ -8,6 +8,7 @@ class GeneralCog(commands.Cog):
 
     @commands.command(name='github', description='Sends link to github repository for bot.')
     async def get_git(self, ctx):
+        """Returns bot github"""
         embed = discord.Embed(title='CS Army Discord Bot',
                               description='GitHub Link for CS Army Discord Bot',
                               url='https://github.com/Solo-Hawk/CS-Army-Discord-Reboot')
@@ -15,6 +16,7 @@ class GeneralCog(commands.Cog):
 
     @commands.command(name="steam")
     async def get_steam(self, ctx):
+        """Returns CS Army Steam"""
         embed = discord.Embed(title='CS Army Steam Group',
                               description='Join the Steam Group!',
                               url="https://steamcommunity.com/groups/CSArmyNerds")
