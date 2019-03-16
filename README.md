@@ -20,7 +20,7 @@ The bot repo isn't fully set up to be effective with people forking just yet, bu
 + Streamline Classes to make more readable  
 + Add Modules for more functionality    
     - <del>Starboard</del>      
-    - Auto-Assign Roles  
+    - <del>Auto-Assign Roles Message</del>
     - Moderation (Kick, Ban, etc)  
     - <del>Welcome Message</del>
     - Improved Suggestions  
