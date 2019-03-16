@@ -68,3 +68,4 @@ venv/
 core/token\.txt
 
 core/token list
+*.json
