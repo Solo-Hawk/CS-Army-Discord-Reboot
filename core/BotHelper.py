@@ -3,6 +3,7 @@ import discord
 import json
 import re
 
+
 class BotHelper:
     def __init__(self, bot):
         self.bot = bot
@@ -25,11 +26,6 @@ class BotHelper:
                 return chr(emoji)  # from int return chr
             except OverflowError:
                 return self.bot.get_emoji(emoji)  # else return discord.Emoji
-
-
-
-
-
 
     @staticmethod
     def reload_config():

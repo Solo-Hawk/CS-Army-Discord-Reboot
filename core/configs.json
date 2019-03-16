@@ -1,0 +1,13 @@
+{
+    "auth_ids": [
+        252600343425318912
+    ],
+    "extensions": [
+        "cogs.owner",
+        "cogs.general",
+        "cogs.roles",
+        "cogs.welcome",
+        "cogs.starboard"
+    ],
+    "prefix": "$$"
+}

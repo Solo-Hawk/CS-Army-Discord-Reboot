@@ -15,7 +15,7 @@ class OwnerCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.BotHelper = BotHelper(self.bot)
-        self.configs = self.BotHelper.reload_config()
+        self.configs = self.BotHelper.get_config()
 
     @has_auth()
     @commands.command(name='load', hidden=True)
@@ -29,7 +29,7 @@ class OwnerCog(commands.Cog):
         else:
             await ctx.send(f'Successfully Loaded: {cog}')
             self.configs['extensions'].append(cog)
-            BotHelper.update_config(self.configs)
+            self.BotHelper.update_config()
 
     @has_auth()
     @commands.command(name='unload', hidden=True)
@@ -43,7 +43,7 @@ class OwnerCog(commands.Cog):
         else:
             await ctx.send(f'Successfully Unloaded: {cog}')
             self.configs['extensions'].remove(cog)
-            BotHelper.update_config(self.configs)
+            self.BotHelper.update_config()
 
     @has_auth()
     @commands.command(name='reload', hidden=True)
@@ -84,7 +84,7 @@ class OwnerCog(commands.Cog):
     @commands.command(name="set_prefix", hidden=True)
     async def set_prefix(self, ctx, prefix):
         self.configs["prefix"] = prefix
-        BotHelper.update_config(self.configs)
+        self.BotHelper.update_config()
         await ctx.send(f"Prefix updated to {prefix}")
 
 
