@@ -32,3 +32,6 @@ The bot repo isn't fully set up to be effective with people forking just yet, bu
 + More Configs and way to store data for multiple servers  
 + Update to use a database instead of a json file and separate configs and guild data
 
+## Other Notes
+
+The folder core/ contains a guild_data.json, config.json and a token.txt 
