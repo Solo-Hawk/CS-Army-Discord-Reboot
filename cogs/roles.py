@@ -18,7 +18,6 @@ class RolesCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
-        print(self.BotHelper.convert_emoji(str(reaction.emoji)))
         if str(reaction.message.id) == self.guild_data[str(reaction.message.guild.id)]["auto_role_message_id"] and not user.bot:
             for reactor in self.guild_data[str(reaction.message.guild.id)]["auto_role_reactors"]:
                 if self.BotHelper.convert_emoji(str(reaction.emoji)) == int(reactor[0]):
@@ -28,8 +27,6 @@ class RolesCog(commands.Cog):
     @commands.command(name="add_auto_role_emoji")
     async def add_emoji(self, ctx, emoji, role: commands.RoleConverter):
         """Takes an emoji and a role and adds it to auto-role message"""
-        print(type(emoji))
-        print(emoji)
         if "auto_role_channel" in self.guild_data[str(ctx.message.guild.id)]:
             if "auto_role_reactors" not in self.guild_data[str(ctx.message.guild.id)]:
                 self.guild_data[str(ctx.message.guild.id)]["auto_role_reactors"] = []
