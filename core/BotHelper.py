@@ -27,6 +27,23 @@ class BotHelper:
             except OverflowError:
                 return self.bot.get_emoji(emoji)  # else return discord.Emoji
 
+    def convert_partial_emoji(self, emoji):
+        if isinstance(emoji, discord.PartialEmoji):
+            if emoji.is_custom_emoji():
+                return emoji.id
+            elif emoji.is_unicode_emoji():
+                return emoji.name
+        if isinstance(emoji, str):
+            try:
+                emoji = int(emoji)
+            except ValueError:
+                print("Convert_partial_emoji has been passed a non-int string")
+        if isinstance(emoji, int):
+                try:
+                    return chr(emoji)  # from int return chr
+                except OverflowError:
+                    return self.bot.get_emoji(emoji)  # else return discord.Emoji
+
     @staticmethod
     def reload_config():
         with open('core/configs.json') as r:

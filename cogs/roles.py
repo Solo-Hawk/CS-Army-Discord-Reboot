@@ -2,6 +2,8 @@ from discord.ext import commands
 from core.BotHelper import BotHelper
 
 
+# TODO: Add support for multiple role messages per guild
+# TODO: Add support for messages sent by user to be used for auto-role
 class RolesCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -10,18 +12,25 @@ class RolesCog(commands.Cog):
         self.guild_data = self.BotHelper.get_guild_data()
 
     @commands.Cog.listener()
-    async def on_reaction_remove(self, reaction, user):
-        if str(reaction.message.id) == self.guild_data[str(reaction.message.guild.id)]["auto_role_message_id"] and not user.bot:
-            for reactor in self.guild_data[str(reaction.message.guild.id)]["auto_role_reactors"]:
-                if int(self.BotHelper.convert_emoji(str(reaction.emoji))) == int(reactor[0]):
-                    await user.remove_roles(reaction.message.guild.get_role(int(reactor[1])))
+    async def on_raw_reaction_remove(self, payload):
+        print("reaction removed")
+        # TODO: Change to use raw_reaction
+        guild = self.bot.get_guild(payload.guild_id)
+        user = guild.get_member(payload.user_id)
+        if str(payload.message_id) == self.guild_data[str(payload.guild_id)]["auto_role_message_id"] and not user.bot:
+            for reactor in self.guild_data[str(payload.guild_id)]["auto_role_reactors"]:
+                if self.BotHelper.convert_partial_emoji(payload.emoji) == int(reactor[0]):
+                    await user.remove_roles(guild.get_role(int(reactor[1])))
 
     @commands.Cog.listener()
-    async def on_reaction_add(self, reaction, user):
-        if str(reaction.message.id) == self.guild_data[str(reaction.message.guild.id)]["auto_role_message_id"] and not user.bot:
-            for reactor in self.guild_data[str(reaction.message.guild.id)]["auto_role_reactors"]:
-                if self.BotHelper.convert_emoji(str(reaction.emoji)) == int(reactor[0]):
-                    await user.add_roles(reaction.message.guild.get_role(int(reactor[1])))
+    async def on_raw_reaction_remove(self, payload):
+        # TODO: Change to use raw_reaction
+        guild = self.bot.get_guild(payload.guild_id)
+        user = guild.get_member(payload.user_id)
+        if str(payload.message_id) == self.guild_data[str(payload.guild_id)]["auto_role_message_id"] and not user.bot:
+            for reactor in self.guild_data[str(payload.guild_id)]["auto_role_reactors"]:
+                if self.BotHelper.convert_partial_emoji(payload.emoji) == int(reactor[0]):
+                    await user.add_roles(guild.get_role(int(reactor[1])))
 
     @commands.has_permissions(administrator=True)
     @commands.command(name="add_auto_role_emoji")
