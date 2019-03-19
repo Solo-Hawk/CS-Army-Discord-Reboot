@@ -6,7 +6,8 @@ from core.BotHelper import BotHelper
 async def get_prefix(bot, message):
     """Returns prefix for bot, currently this allows for changing prefix in future could implement per-server
     prefix"""
-    return BotHelper.get_config()["prefix"]
+    # TODO: Test
+    return BotHelper.get_guild_data()[str(message.guild.id)]["prefix"]
 
 bot = commands.Bot(command_prefix=get_prefix)
 BotHelper = BotHelper(bot)
@@ -21,7 +22,7 @@ async def on_ready():
 async def on_guild_join(guild):
     """When bot joins ne guild adds data to guild_data.json"""
     guild_data = BotHelper.get_guild_data()
-    guild_data[str(guild.id)] = {}
+    guild_data[str(guild.id)] = {"prefix": "$$"}
     BotHelper.update_guild_data()
 
 
