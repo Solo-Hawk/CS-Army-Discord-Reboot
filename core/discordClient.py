@@ -1,34 +1,18 @@
 from discord.ext import commands
-import os
-import importlib.util
-import json
-
-mdb_client = commands.Bot(command_prefix='$$')
+from discord.ext import commands as discord
 
 
-def get_manifest():
-    """
-    Loads manifest of modules declared in relevant JSON file
-    :return:
-    """
-    with open("module/manifest.json") as f:
-        manifest = json.load(f)
-    print(manifest)
-    return manifest
+def run_bot():
+    bot = commands.Bot(command_prefix='$$')
+
+    @bot.listen("on_ready")
+    async def ready():
+        guild = bot.get_guild(435616811602673688)
+        print(guild.roles)
+        role = guild.get_role()
+
+        pass
+    
 
 
-class PluginManager:
-    bot = mdb_client
-    manifest = get_manifest()
-
-    def __init__(self):
-        for x in self.manifest["modules"]:
-            spec = importlib.util.spec_from_file_location(x, f"module/{x}/__module__.py")  # Module file
-            foo = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(foo)  # Executing module
-            print(x)
-            print(foo)
-            foo.Module(self.bot)  # Running module class
-
-plugin_manager = PluginManager()
-
+    return bot
