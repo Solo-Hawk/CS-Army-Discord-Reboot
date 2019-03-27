@@ -68,3 +68,5 @@ venv/
 core/token\.txt
 
 core/token list
+
+core/auth_roles\.json
