@@ -1,14 +1,10 @@
 # CS Army Discord Reboot
 
-Since keeping this project dormant for a while I needed to just reach a point where my overall productivity went up before actually doing anything, this mainly started with my Uni work and slowly leaked into other areas. Thanks to this I finally made a deployable version of the bot. 
+This is the reboot of the reboot. It is written using a more up-to-date implementation of cogs and extensions.
 
-The current set of issues is with modularity, downtimes and updates. Also being able to trying to push fixes without distrupting the bot's uptime, evern for a few seconds.
+Please give me feedback as I am pretty new to this type of project.
 
-I basically celotaped a quick working version, making it easier to do things now.
-
-During this time I will doing a lot of fixes and cleaning up code, making some methods more efficient and seeing where I can improve on using better 'models'
-
-For me it has been a very long while since I have done some larger projects but starting small I'm going to be working up again.
+NOTE: When using this ensure to edit config with welcome_id and auth_ids
 
 ## I want to help
 
@@ -20,10 +16,21 @@ The bot repo isn't fully set up to be effective with people forking just yet, bu
 
 ## Task List
 
-[x] - Deploy basic build of MDB 
-[x] - Deploy basic build of CS Army Bot
-[x] - Make better branch names (Development and Deployment look too similar when I'm tired)
-[ ] - Refactor Files and Variables, make naming clear
-[ ] - Commenting and sorting WIP modules
-[ ] - Building module template
-[ ] - Bot support multi-server
++ ERROR HANDLING  
++ Add custom help commands
++ Change more plain text messages to embeds  
++ Add Modules for more functionality    
+    - <del>Starboard</del>      
+    - <del>Auto-Assign Roles Message</del>
+    - Moderation (Kick, Ban, etc)  
+    - <del>Welcome Message</del>
+    - Improved Suggestions  
+    - Votes  
+    - Some sort of logging?
+    - Server Stats
++ Refactor Files and Variables, make naming clear
++ Update to use a database instead of a json file
+
+## Other Notes
+
+The folder core/ contains a guild_data.json, config.json and a token.txt 
