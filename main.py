@@ -1,42 +1,52 @@
-
-import importlib.util
-import json
-import core.discordClient as discordClient
-
-
-def main():
-    bot = discordClient.run_bot()
-    bot.login("NDM5NTc3MTQ4MDM1MDM5MjMz.DkOqVA.zlg1ii2y51OBJmPl1hhkfW2M318")
+# Author: Davis#9654 | Modified: YeetMachine#1337
+from discord.ext import commands
+import traceback
+import discord
+from core.BotHelper import BotHelper
 
 
-
-    #
-    # manifest = get_manifest()
-    # run_modules(bot, manifest)
-
-
-def get_manifest():
-    """
-    Loads manifest of modules declared in relevant JSON file
-    :return:
-    """
-    with open("module/manifest.json") as f:
-        manifest = json.load(f)
-    print(manifest)
-    return manifest
+def get_prefix(bot, message):
+    """Returns prefix for bot, currently this allows for changing prefix in future could implement per-server
+    prefix, current DM prefix is $$"""
+    try:
+        return BotHelper.get_guild_data()[str(message.guild.id)]["prefix"]
+    except AttributeError as e:
+        return "$$"
 
 
-def run_modules(bot, manifest):
+bot = commands.Bot(command_prefix=get_prefix)
+BotHelper = BotHelper(bot)
 
-    for x in manifest["modules"]:
-        spec = importlib.util.spec_from_file_location(x, f"module/{x}/__module__.py")  # Module file
-        unit = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(unit)  # Executing module
-        print(x)
-        print(unit)
-        unit.Module(bot)  # Running module class
+
+@bot.event
+async def on_ready():
+    print(f'\n\nLogged in as: {bot.user.name} - {bot.user.id}\nVersion: {discord.__version__}\n')
+
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.errors.CommandNotFound):
+        await ctx.send("That command is not recognized")
+    else:
+        raise error
+
+
+@bot.event
+async def on_guild_join(guild):
+    """When bot joins ne guild adds data to guild_data.json"""
+    guild_data = BotHelper.get_guild_data()
+    guild_data[str(guild.id)] = {"prefix": "$$", "auth_role": []}
+    BotHelper.update_guild_data()
 
 
 if __name__ == '__main__':
-    main()
+    for extension in BotHelper.get_config()["extensions"]:
+        try:
+            bot.load_extension(extension)
+            print(f'Successfully Loaded {extension}')
+        except Exception as e:
+            traceback.print_exc()
+            print(f'Failed to load {extension} Error: {str(e)}')
 
+token = open('core/token.txt').read()
+bot.run(token)

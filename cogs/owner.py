@@ -1,0 +1,98 @@
+# Author: Davis#9654
+from discord.ext import commands
+from core.BotHelper import BotHelper
+
+
+def has_auth():
+    config = BotHelper.reload_config()
+
+    def predicate(ctx):
+        return ctx.message.author.id in config["auth_ids"]
+
+    return commands.check(predicate)
+
+
+class OwnerCog(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.BotHelper = BotHelper(self.bot)
+        self.configs = self.BotHelper.get_config()
+
+    @has_auth()
+    @commands.command(name='load', hidden=True)
+    async def on_cog_load(self, ctx, *, cog: str):
+        """Command which Loads a Module.
+        Remember to use dot path. e.g: cogs.owner"""
+        try:
+            self.bot.load_extension(cog)
+        except Exception as e:
+            await ctx.send(f'Error: {type(e).__name__} - {e}')
+        else:
+            await ctx.send(f'Successfully Loaded: {cog}')
+            self.configs['extensions'].append(cog)
+            self.BotHelper.update_config()
+
+    @has_auth()
+    @commands.command(name='unload', hidden=True)
+    async def cmd_cog_unload(self, ctx, *, cog: str):
+        """Command which Unloads a Module.
+        Remember to use dot path. e.g: cogs.owner"""
+        try:
+            self.bot.unload_extension(cog)
+        except Exception as e:
+            await ctx.send(f'Error: {type(e).__name__} - {e}')
+        else:
+            await ctx.send(f'Successfully Unloaded: {cog}')
+            self.configs['extensions'].remove(cog)
+            self.BotHelper.update_config()
+
+    @has_auth()
+    @commands.command(name='reload', hidden=True)
+    async def on_cog_reload(self, ctx, *, cog: str):
+        """Unloads and Reloads a Module.
+        Remember to use dot path. e.g: cogs.owner"""
+        try:
+            self.bot.unload_extension(cog)
+            self.bot.load_extension(cog)
+        except Exception as e:
+            await ctx.send(f'Error: {type(e).__name__} - {e}')
+        else:
+            await ctx.send(f'Successfully Reloaded: {cog}')
+
+    @has_auth()
+    @commands.command(name='list_cogs', hidden=True)
+    async def list_cogs(self, ctx):
+        """Command which lists all cogs"""
+        cogs = self.bot.cogs
+
+        message = ""
+        for cog_class, cog_name in cogs.items():
+            message += f'Class: {cog_class} Object: {cog_name}\n'
+        await ctx.send(message)
+
+    @has_auth()
+    @commands.command(name='reload_all', hidden=True)
+    async def reload_all_cogs(self, ctx):
+        for extension in self.configs['extensions']:
+            try:
+                self.bot.unload_extension(extension)
+                self.bot.load_extension(extension)
+                await ctx.send(f'Successfully Reloaded {extension}')
+            except Exception as e:
+                await ctx.send(f'Failed to reload {extension} Error: {str(e)}')
+
+    @has_auth()
+    @commands.command(name="set_prefix", hidden=True)
+    async def set_prefix(self, ctx, prefix):
+        self.configs["prefix"] = prefix
+        self.BotHelper.update_config()
+        await ctx.send(f"Prefix updated to {prefix}")
+
+    @has_auth()
+    @commands.command(name="convert_emoji", hidden=True)
+    async def _convert_emoji(self, ctx, emoji):
+        await ctx.send(self.BotHelper.convert_emoji(emoji))
+
+
+def setup(bot):
+    bot.add_cog(OwnerCog(bot))
