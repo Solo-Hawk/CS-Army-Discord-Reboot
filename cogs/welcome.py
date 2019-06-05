@@ -1,4 +1,4 @@
-# Author: Davis#9654
+# Author: Davis#9654 | Modified: YeetMachine#1337
 from discord.ext import commands
 import discord
 from core.BotHelper import BotHelper
@@ -17,6 +17,7 @@ class WelcomeCog(commands.Cog):
             embed = discord.Embed(title="Welcome!", description=f'{member.name} has Joined the Server!', color=583680)
             channel = self.bot.get_channel(int(self.guild_data[str(member.guild.id)]["welcome_id"]))
             await channel.send(embed=embed)
+        await self.update_member_counter(member)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
@@ -24,6 +25,7 @@ class WelcomeCog(commands.Cog):
             embed = discord.Embed(title="Goodbye", description=f'{member.name} has Left the Server!', color=16713287)
             channel = self.bot.get_channel(int(self.guild_data[str(member.guild.id)]["welcome_id"]))
             await channel.send(embed=embed)
+        await self.update_member_counter(member)
 
     @commands.has_permissions(administrator=True)
     @commands.command(name="set_welcome")
@@ -47,6 +49,24 @@ class WelcomeCog(commands.Cog):
         self.guild_data[str(ctx.guild.id)]["welcome_id"] = ""
         self.BotHelper.update_guild_data()
         await ctx.send(f'Welcome channel disabled')
+
+    @commands.has_permissions(administrator=True)
+    @commands.command(name="set_member_counter")
+    async def set_member_counter(self, ctx, channel: commands.VoiceChannelConverter):
+        """Given a channel it updates the welcome for that guild"""
+        self.guild_data[str(ctx.guild.id)]["member_counter"] = channel.id
+        self.BotHelper.update_guild_data()
+        await ctx.send(f'Counter set to: {channel.name}')
+
+    async def update_member_counter(self, ctx):
+        print(ctx.guild.id)
+        print(self.guild_data[str(ctx.guild.id)])
+        print(self.guild_data[str(ctx.guild.id)]["member_counter"])
+
+        if "member_counter" not in self.guild_data[str(ctx.guild.id)]:
+            return
+        channel = self.bot.get_channel(self.guild_data[str(ctx.guild.id)]["member_counter"])
+        await channel.edit(name=f"members: {ctx.guild.member_count}")
 
 
 def setup(bot):

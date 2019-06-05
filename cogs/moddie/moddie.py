@@ -1,8 +1,19 @@
-# Author: Davis#9654 built on YeetMachine#1337 original code
+# Author: Davis#9654 built on YeetMachine#1337 original code | Modified: YeetMachine#1337
 from discord.ext import commands
 import discord
 from core.BotHelper import BotHelper
 import json
+
+
+def is_auth_role(ctx: commands.Context):
+    check = False
+    guild_data = BotHelper.reload_guild_data()
+    auth_ids = guild_data[str(ctx.guild.id)]["auth_role"]
+    print(ctx.author.roles)
+    for auth_id in auth_ids:
+        if not discord.utils.find(lambda role_id: role_id == auth_id, auth_ids) is None:
+            return True
+    return False  # Match NOT found
 
 
 class ModdieCog(commands.Cog):
@@ -28,12 +39,18 @@ class ModdieCog(commands.Cog):
         self.active_cases["cases"].append(role)
         self.save_cases()
 
-    def remove_case(self, role: int):
-        self.active_cases["cases"].remove(role)
+    def remove_case(self, member: int):
+        self.active_cases["cases"].remove(member)
         self.save_cases()
 
     @commands.command(name="mod")
     async def mod_help(self, ctx):
+        if not isinstance(ctx.channel, discord.DMChannel):
+            await ctx.send("Please DM for your discretion in calling a moderator")
+            return
+        if ctx.author.id in self.get_cases():
+            await ctx.send("You already have an open thread with a moderator")
+            return
         if await self.BotHelper.yes_no(ctx, "Would you like to chat with an admin?"):
             reason = await self.BotHelper.get_response(ctx, "Why do you need a moderator?")
             category = self.bot.get_channel(self.config["case_category"])
@@ -50,7 +67,7 @@ class ModdieCog(commands.Cog):
         else:
             await ctx.send("Ok! Have fun!")
 
-    @commands.has_permissions(administrator=True)
+    @commands.check(is_auth_role)
     @commands.command(name='end',
                       help='Ends discussion thread in moddie',
                       brief='End thread',

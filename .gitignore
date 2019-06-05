@@ -6,3 +6,5 @@ cogs/__pycache__
 core/__pycache__
 cogs/moddie/__pycache__/
 cogs/moddie/active_cases.json
+
+venv/*

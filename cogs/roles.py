@@ -1,4 +1,4 @@
-# Author: Davis#9654
+# Author: Davis#9654 | Modified: YeetMachine#1337
 from discord.ext import commands
 import discord
 from core.BotHelper import BotHelper
@@ -55,31 +55,35 @@ class RolesCog(commands.Cog):
 
     @commands.has_permissions(administrator=True)
     @commands.command(name="add_auto_role_message")
-    async def add_auto_role_message(self, ctx):
+    async def add_auto_role_message(self, ctx, channel: commands.TextChannelConverter):
         """Use this command to setup an auto role message"""
         messages = [ctx.message, await ctx.send("Send the message for the auto-role")]
 
         def check(m):
             return m.author == ctx.message.author and m.channel.id == ctx.message.channel.id
 
-        msg = await self.bot.wait_for('message', check=check, timeout=240)
-
-        messages.append(await ctx.send("Now its time to add emojis/roles. Add the emojis on to the message you want to use and then send any message to this channel"))
+        user_msg = await self.bot.wait_for('message', check=check, timeout=240)
+        role_msg = await channel.send(user_msg.content)
+        messages.append(user_msg)
+        messages.append(await ctx.send("Now its time to add emojis/roles. "
+                                       "Add the emojis on to the message sent to specified channel that you want to use and "
+                                       "then send any message to this channel"))
         messages.append(await self.bot.wait_for('message', check=check, timeout=240))
 
-        reactions = msg.reactions
+        reactions = user_msg.reactions
         reactors = []
         for reaction in reactions:
             role = await self.get_role(ctx, f"Send a role for {reaction}")
-            await msg.add_reaction(reaction)
+            await role_msg.add_reaction(reaction)
             reactors.append([self.BotHelper.convert_emoji(str(reaction)), role.id])
 
         if "auto_role_messages" not in self.guild_data[str(ctx.guild.id)]:
             self.guild_data[str(ctx.guild.id)]["auto_role_messages"] = {}
-        if str(ctx.channel.id) not in  self.guild_data[str(ctx.guild.id)]["auto_role_messages"]:
-            self.guild_data[str(ctx.guild.id)]["auto_role_messages"][str(ctx.channel.id)] = {}
-
-        self.guild_data[str(ctx.guild.id)]["auto_role_messages"][str(ctx.channel.id)][str(msg.id)] = reactors
+        if str(channel.id) not in self.guild_data[str(ctx.guild.id)]["auto_role_messages"]:
+            self.guild_data[str(ctx.guild.id)]["auto_role_messages"][str(channel.id)] = {}
+        print(reactors)
+        print(self.guild_data)
+        self.guild_data[str(ctx.guild.id)]["auto_role_messages"][str(channel.id)][str(role_msg.id)] = reactors
         self.BotHelper.update_guild_data()
 
         for message in messages:
@@ -105,6 +109,7 @@ class RolesCog(commands.Cog):
     @commands.has_permissions(administrator=True)
     @commands.command(name="delete_auto_role_message")
     async def delete_auto_role_message(self, ctx, message_id):
+        #  Change to use converter
         try:
             for channel, messages in self.guild_data[str(ctx.guild.id)]["auto_role_messages"].copy().items():  # loops through channels and messages
                 for message in messages.copy():  # for each message

@@ -20,7 +20,7 @@ class OwnerCog(commands.Cog):
 
     @has_auth()
     @commands.command(name='load', hidden=True)
-    async def cog_load(self, ctx, *, cog: str):
+    async def on_cog_load(self, ctx, *, cog: str):
         """Command which Loads a Module.
         Remember to use dot path. e.g: cogs.owner"""
         try:
@@ -48,7 +48,7 @@ class OwnerCog(commands.Cog):
 
     @has_auth()
     @commands.command(name='reload', hidden=True)
-    async def cog_reload(self, ctx, *, cog: str):
+    async def on_cog_reload(self, ctx, *, cog: str):
         """Unloads and Reloads a Module.
         Remember to use dot path. e.g: cogs.owner"""
         try:
