@@ -1,36 +1,32 @@
-# Author: YeetMachine#1337
+# Author: YeetMachine#1337 | Modified: Davis#9654
 from discord.ext import commands
 import discord
-from core.BotHelper import BotHelper
 
 
-class AdministratorCog(commands.Cog):
+class Administrator(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.BotHelper = BotHelper(bot)
-        self.guild_data = self.BotHelper.get_guild_data()
 
     @commands.has_permissions(administrator=True)
     @commands.command(name="add_auth_role")
-    async def add_auth_role(self, ctx, role: commands.RoleConverter, reason="unspecified"):
+    async def add_auth_role(self, ctx, role: commands.RoleConverter):
         """Adds role to Auth"""
         print(role)
         print(type(role))
-        if role.id in self.guild_data[str(ctx.guild.id)]["auth_role"]:
+        if role.id in self.bot.get_guild_data(ctx.guild.id, key="auth_role"):
             await ctx.send("Role already added")
             return
-        self.guild_data[str(ctx.guild.id)]["auth_role"].append(role.id)
-        self.BotHelper.update_guild_data()
+        self.bot.guild_data_update(ctx.guild.id, {"auth_role": role.id}, append=True)
 
     @commands.has_permissions(administrator=True)
     @commands.command(name="remove_auth_role")
-    async def remove_auth_role(self, ctx, role: commands.RoleConverter, reason="unspecified"):
+    async def remove_auth_role(self, ctx, role: commands.RoleConverter):
         """Adds role to Auth"""
         print(role)
         print(type(role))
-        if role.id in self.guild_data[str(ctx.guild.id)]["auth_role"]:
-            self.guild_data[str(ctx.guild.id)]["auth_role"].remove(role.id)
-            self.BotHelper.update_guild_data()
+        if role.id in self.bot.get_guild_data(ctx.guild.id, key="auth_role"):
+            auth_roles = self.bot.get_guild_data(ctx.guild.id, key="auth_role")
+            self.bot.guild_data_update(ctx.guild.id, data={"auth_roles": auth_roles.remove(role.id)}, append=False)
             await ctx.send("Role removed")
         return
 
@@ -66,4 +62,4 @@ class AdministratorCog(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(AdministratorCog(bot))
+    bot.add_cog(Administrator(bot))
