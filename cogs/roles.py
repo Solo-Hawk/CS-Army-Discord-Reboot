@@ -3,7 +3,7 @@ from discord.ext import commands
 import discord
 
 
-class RolesCog(commands.Cog):
+class Roles(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -62,7 +62,7 @@ class RolesCog(commands.Cog):
         role_msg = await channel.send(user_msg.content)
         messages.append(user_msg)
         messages.append(await ctx.send("Now its time to add emojis/roles. "
-                                       "Add the emojis on to the message sent to specified channel that you want to use and "
+                                       "Add the emojis on to the message you sent "
                                        "then send any message to this channel"))
         messages.append(await self.bot.wait_for('message', check=check, timeout=240))
 
@@ -144,4 +144,4 @@ class RolesCog(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(RolesCog(bot))
+    bot.add_cog(Roles(bot))

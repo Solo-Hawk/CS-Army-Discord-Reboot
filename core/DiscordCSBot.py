@@ -17,7 +17,8 @@ class DiscordCSBot(commands.Bot):
                 "auth_ids": [],
                 "extensions": [],
                 "default_prefix": "$$",
-                "mod_id": 0
+                "mod_id": 0,
+                "auth_roles": []
         }
 
         guild_data_default = {}
@@ -25,7 +26,7 @@ class DiscordCSBot(commands.Bot):
         for file, default_value in [(config_file, config_default), (guild_data_file, guild_data_default)]:
             if not os.path.exists(file):
                 with open(file, 'w') as w:
-                    json.dump(default_value, w)
+                    json.dump(default_value, w, indent=4)
 
     def guild_data(self):
         with open(self.guild_data_file) as r:
@@ -45,7 +46,7 @@ class DiscordCSBot(commands.Bot):
                 guild_data[str(guild_id)][data_key] = data_value
 
         with open(self.guild_data_file, 'w') as w:
-            json.dump(guild_data, w)
+            json.dump(guild_data, w, indent=4)
 
     def get_guild_data(self, guild_id, key=None):
         guild_data = self.guild_data()
@@ -58,7 +59,7 @@ class DiscordCSBot(commands.Bot):
 
     def write_guild_data(self, data):
         with open(self.guild_data_file, 'w'):
-            json.dump(data)
+            json.dump(data, indent=4)
 
     def get_config(self, config=None):
         with open(self.config_file) as r:

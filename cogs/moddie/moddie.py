@@ -5,14 +5,14 @@ import json
 
 
 def is_auth_role(ctx: commands.Context):
-    auth_roles = ctx.bot.get_guild_data(ctx.guild.id, key="auth_role")
+    auth_roles = ctx.bot.get_guild_data(ctx.guild.id, key="auth_roles")
     for auth_role in auth_roles:
         if not discord.utils.find(lambda role_id: role_id == auth_role, auth_roles) is None:
             return True
     return False  # Match NOT found
 
 
-class ModdieCog(commands.Cog):
+class Moddie(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.active_cases = self.get_cases()
@@ -85,4 +85,4 @@ class ModdieCog(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(ModdieCog(bot))
+    bot.add_cog(Moddie(bot))

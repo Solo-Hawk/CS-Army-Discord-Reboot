@@ -3,7 +3,7 @@ from discord.ext import commands
 import discord
 
 
-class WelcomeCog(commands.Cog):
+class Welcome(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -54,4 +54,4 @@ class WelcomeCog(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(WelcomeCog(bot))
+    bot.add_cog(Welcome(bot))
