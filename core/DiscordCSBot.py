@@ -1,6 +1,8 @@
 from discord.ext import commands
 import json
 import os
+import discord
+import re
 
 
 class DiscordCSBot(commands.Bot):
@@ -54,6 +56,10 @@ class DiscordCSBot(commands.Bot):
         except KeyError:
             return None
 
+    def write_guild_data(self, data):
+        with open(self.guild_data_file, 'w'):
+            json.dump(data)
+
     def get_config(self, config=None):
         with open(self.config_file) as r:
             if config is None:
@@ -96,4 +102,39 @@ class DiscordCSBot(commands.Bot):
 
         await ctx.send(prompt)
         return (await self.wait_for('message', check=check, timeout=60)).content
+
+    def convert_emoji(self, emoji):
+        """Takes an emoji or an id and converts between ID and Emoji/Unicode"""
+        if isinstance(emoji, str):
+            try:
+                emoji.encode('ascii')  # Check if emoji is a unicode char, if it is throws UnicodeEncodeError
+            except UnicodeEncodeError:
+                return ord(emoji)  # Return the integer representation
+
+            emoji_id_search = re.search(r'^<:([a-zA-Z0-9_.-]+):(\d+)>$',
+                                        emoji)  # if its not unicode it is discord emoji so we parse string to get id
+            if emoji_id_search.group(2):
+                return int(emoji_id_search.group(2))
+        elif isinstance(emoji, int):
+            try:
+                return chr(emoji)  # from int return chr
+            except OverflowError:
+                return self.bot.get_emoji(emoji)  # else return discord.Emoji
+
+    def convert_partial_emoji(self, emoji):
+        if isinstance(emoji, discord.PartialEmoji):  # if emoji is a PartialEmoji
+            if emoji.is_custom_emoji():  # if custom then we return the id
+                return emoji.id
+            elif emoji.is_unicode_emoji():  # if unicode then we return int representation
+                return ord(emoji.name)
+        if isinstance(emoji, str):  # if it is string then we just convert to int
+            try:
+                emoji = int(emoji)
+            except ValueError:
+                print("Convert_partial_emoji has been passed a non-int string")
+        if isinstance(emoji, int):  # if it is int then we convert to unicode or to discord.Emoji
+            try:
+                return chr(emoji)  # from int return chr
+            except OverflowError:
+                return self.bot.get_emoji(emoji)  # else return discord.Emoji
 
