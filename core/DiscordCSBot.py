@@ -76,12 +76,24 @@ class DiscordCSBot(commands.Bot):
         with open(self.config_file, 'w') as w:
             json.dump(config, w)
 
-    def has_auth(self):
-        auth_ids = self.get_config(config="auth_ids")
+    async def yes_no(self, ctx, prompt):
+        def check(reaction, user):
+            return ctx.author.id == user.id and reaction.emoji in ['👎', '👍']
 
-        def predicate(ctx):
-            return ctx.message.author.id in auth_ids
+        msg = await ctx.send(prompt)
+        await msg.add_reaction('👍')
+        await msg.add_reaction('👎')
 
-        return commands.check(predicate)
+        reaction = await self.wait_for('reaction_add', check=check, timeout=60)
+        if reaction[0].emoji == '👍':
+            return True
+        else:
+            return False
 
+    async def get_response(self, ctx, prompt):
+        def check(m):
+            return m.author == ctx.author and m.channel == ctx.channel
+
+        await ctx.send(prompt)
+        return (await self.wait_for('message', check=check, timeout=60)).content
 
