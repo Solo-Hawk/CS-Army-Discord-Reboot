@@ -1,17 +1,13 @@
 # Author: Davis#9654 built on YeetMachine#1337 original code | Modified: YeetMachine#1337
 from discord.ext import commands
 import discord
-from core.BotHelper import BotHelper
 import json
 
 
 def is_auth_role(ctx: commands.Context):
-    check = False
-    guild_data = BotHelper.reload_guild_data()
-    auth_ids = guild_data[str(ctx.guild.id)]["auth_role"]
-    print(ctx.author.roles)
-    for auth_id in auth_ids:
-        if not discord.utils.find(lambda role_id: role_id == auth_id, auth_ids) is None:
+    auth_roles = ctx.bot.get_guild_data(ctx.guild.id, key="auth_role")
+    for auth_role in auth_roles:
+        if not discord.utils.find(lambda role_id: role_id == auth_role, auth_roles) is None:
             return True
     return False  # Match NOT found
 
@@ -19,8 +15,6 @@ def is_auth_role(ctx: commands.Context):
 class ModdieCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.BotHelper = BotHelper(bot)
-        self.config = self.BotHelper.reload_config()
         self.active_cases = self.get_cases()
 
     @staticmethod
@@ -51,17 +45,17 @@ class ModdieCog(commands.Cog):
         if ctx.author.id in self.get_cases():
             await ctx.send("You already have an open thread with a moderator")
             return
-        if await self.BotHelper.yes_no(ctx, "Would you like to chat with an admin?"):
-            reason = await self.BotHelper.get_response(ctx, "Why do you need a moderator?")
-            category = self.bot.get_channel(self.config["case_category"])
-            guild = self.bot.get_guild(self.config["guild_id"])
+        if await self.bot.yes_no(ctx, "Would you like to chat with an admin?"):
+            reason = await self.bot.get_response(ctx, "Why do you need a moderator?")
+            category = self.bot.get_channel(self.bot.get_config(config="case_category"))
+            guild = self.bot.get_guild(self.bot.get_config(config="guild_id"))
             channel = await guild.create_text_channel(name=f"case {ctx.author.id}",
                                                       category=category,
                                                       reason="Moddie Channel")
             await channel.set_permissions(ctx.author, read_messages=True)
             await channel.edit(topic=f"{ctx.author.id}")
-            embed = discord.Embed(title=f"{ctx.author.name} Ticket", description=f'Reason: {reason} \n Report By: {ctx.author.mention} \n Calling: <@&{self.config["mod_id"]}>')
-            await channel.send(f'{ctx.author.mention} <@&{self.config["mod_id"]}>', embed=embed)
+            embed = discord.Embed(title=f"{ctx.author.name} Ticket", description=f'Reason: {reason} \n Report By: {ctx.author.mention} \n Calling: <@&{self.bot.get_config(config="mod_id")}>')
+            await channel.send(f'{ctx.author.mention} <@&{self.bot.get_config(config="mod_id")}>', embed=embed)
             await ctx.send("A channel has been created with a moderator!")
             self.add_case(ctx.author.id)
         else:
