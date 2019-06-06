@@ -31,14 +31,6 @@ async def on_ready():
 
 
 @bot.event
-async def on_command_error(ctx, error):
-    if isinstance(error, commands.errors.CommandNotFound):
-        await ctx.send("That command is not recognized")
-    else:
-        raise error
-
-
-@bot.event
 async def on_guild_join(guild):
     """When bot joins new guild adds data to guild_data.json"""
     bot.guild_data_update(guild.id, {"prefix": bot.get_config(config="default_prefix"), "auth_role": []}, append=False)

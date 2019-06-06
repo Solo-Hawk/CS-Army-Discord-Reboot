@@ -10,7 +10,6 @@ class CommandErrorHandler(commands.Cog):
             return
 
         ignored_exceptions = (
-            commands.CommandNotFound,
             commands.UserInputError
         )
 
@@ -21,6 +20,9 @@ class CommandErrorHandler(commands.Cog):
 
         elif isinstance(error, commands.MissingRequiredArgument):
             return await ctx.send_help(ctx.command)
+
+        elif isinstance(error, commands.CommandNotFound):
+            return await ctx.send("That command does not exist")
 
         elif isinstance(error, commands.NotOwner):
             return await ctx.send("This command requires you to be the bot owner")
