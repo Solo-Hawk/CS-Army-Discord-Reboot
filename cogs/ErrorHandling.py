@@ -10,7 +10,7 @@ class CommandErrorHandler(commands.Cog):
             return
 
         ignored_exceptions = (
-            commands.UserInputError
+
         )
 
         error = getattr(error, 'original', error)
@@ -32,6 +32,7 @@ class CommandErrorHandler(commands.Cog):
 
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+
 
 
 def setup(bot):
