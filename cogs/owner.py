@@ -33,7 +33,7 @@ class Owner(commands.Cog):
             await ctx.send(f'Error: {type(e).__name__} - {e}')
         else:
             await ctx.send(f'Successfully Loaded: {cog}')
-            self.bot.config_update({"extensions": [x for x in self.bot.extensions]})
+            self.bot.config_update({"extensions": [x for x in self.bot.extensions]}, append=False)
 
     @owner.command(name='unload')
     @commands.is_owner()

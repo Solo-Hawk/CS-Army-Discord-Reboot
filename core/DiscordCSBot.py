@@ -18,7 +18,10 @@ class DiscordCSBot(commands.Bot):
                 "extensions": [],
                 "default_prefix": "$$",
                 "mod_id": 0,
-                "auth_roles": []
+                "auth_roles": [],
+                "case_category": 0,
+                "guild_id": 0,
+                "mod_id": 0
         }
 
         guild_data_default = {}
