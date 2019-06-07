@@ -1,21 +1,28 @@
 # Author: Davis#9654 | Modified: YeetMachine#1337
 from discord.ext import commands
+from core.DiscordCSBot import DiscordCSBot
 import traceback
 import discord
-from core.BotHelper import BotHelper
+import json
 
 
-def get_prefix(bot, message):
-    """Returns prefix for bot, currently this allows for changing prefix in future could implement per-server
-    prefix, current DM prefix is $$"""
+async def get_prefix(bot, message):
+    default_prefix = bot.get_config(config="default_prefix")
+    if not message.guild:
+        return default_prefix
     try:
-        return BotHelper.get_guild_data()[str(message.guild.id)]["prefix"]
-    except AttributeError as e:
-        return "$$"
+        prefix = bot.get_guild_data(message.guild.id, "prefix")
+        if prefix is None:
+            bot.guild_data_update(message.guild.id, {"prefix": default_prefix})
+            return default_prefix
+        return prefix
+    except KeyError:
+        bot.guild_data_update(message.guild.id, {"prefix": default_prefix})
+        return default_prefix
 
 
-bot = commands.Bot(command_prefix=get_prefix)
-BotHelper = BotHelper(bot)
+bot = DiscordCSBot(command_prefix=get_prefix)
+bot.help_command = commands.MinimalHelpCommand()
 
 
 @bot.event
@@ -24,29 +31,20 @@ async def on_ready():
 
 
 @bot.event
-async def on_command_error(ctx, error):
-    if isinstance(error, commands.errors.CommandNotFound):
-        await ctx.send("That command is not recognized")
-    else:
-        raise error
-
-
-@bot.event
 async def on_guild_join(guild):
-    """When bot joins ne guild adds data to guild_data.json"""
-    guild_data = BotHelper.get_guild_data()
-    guild_data[str(guild.id)] = {"prefix": "$$", "auth_role": []}
-    BotHelper.update_guild_data()
+    """When bot joins new guild adds data to guild_data.json"""
+    bot.guild_data_update(guild.id, {"prefix": bot.get_config(config="default_prefix"), "auth_role": []}, append=False)
 
 
 if __name__ == '__main__':
-    for extension in BotHelper.get_config()["extensions"]:
+    for extension in bot.get_config(config="extensions"):
         try:
             bot.load_extension(extension)
             print(f'Successfully Loaded {extension}')
         except Exception as e:
             traceback.print_exc()
             print(f'Failed to load {extension} Error: {str(e)}')
+
 
 token = open('core/token.txt').read()
 bot.run(token)

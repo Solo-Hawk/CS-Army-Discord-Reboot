@@ -1,60 +1,72 @@
 # Author: Davis#9654 || Modified: YeetMachine#1337
 from discord.ext import commands
-from core.BotHelper import BotHelper
 import discord
 
 
-class StarboardCog(commands.Cog):
+class Starboard(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.BotHelper = BotHelper(bot)
-        self.configs = self.BotHelper.get_config()
-        self.guild_data = self.BotHelper.get_guild_data()
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
         # TODO: Clean this up
         guild = self.bot.get_guild(payload.guild_id)
         channel = guild.get_channel(payload.channel_id)
-        emoji = self.BotHelper.convert_partial_emoji(payload.emoji)
+        emoji = str(payload.emoji)
         total_stars = 0
-        if payload.message_id in self.guild_data[str(payload.guild_id)]["starboard_messages"]:
+        if payload.message_id in self.bot.get_guild_data(guild.id, key="starboard_messages"):
             return
-        if emoji in self.configs["starboard_emotes"] and "starboard_min" in self.guild_data[str(payload.guild_id)]:
+        if emoji in ["⭐", "	🌟"] and self.bot.get_guild_data(guild.id, "starboard_min") is not None:
             message = await channel.fetch_message(payload.message_id)
             for r in message.reactions:
                 # loops through each reaction and checks if it is a star
-                if self.BotHelper.convert_emoji(r.emoji) in self.configs["starboard_emotes"]:
+                if r.emoji in ["⭐", "🌟"]:
                     total_stars += r.count  # if reaction is a star we add the count to total
             # if count is bigger then min we send it to starboard
             # from "total_stars >=" to "total_stars ==" since reacts after the minimum will re-post message to starboard
-            if total_stars == int(self.guild_data[str(payload.guild_id)]["starboard_min"]):
+            if total_stars == int(self.bot.get_guild_data(guild.id, "starboard_min")):
                 embed = discord.Embed(color=13103696,
                                       description=f'{message.content}\n [Jump To](https://discordapp.com/channels/{payload.guild_id}/{payload.channel_id}/{payload.message_id})')
                 embed.set_footer(text=f"Author: {message.author}", icon_url=message.author.avatar_url)
                 await self.bot.get_channel(
-                    int(self.guild_data[str(payload.guild_id)]["starboard_id"])).send(embed=embed)
+                    int(self.bot.get_guild_data(guild.id, "starboard_id"))).send(embed=embed)
                 # once added, message is added so it cannot be re-starred
-                self.guild_data[str(payload.guild_id)]["starboard_messages"].append(payload.message_id)
-                self.BotHelper.update_guild_data()
+                self.bot.guild_data_update(guild.id, {"starboard_messages": [payload.message_id]})
+
+    @commands.group(invoke_without_command=True)
+    async def starboard(self, ctx):
+        if self.bot.get_guild_data(ctx.guild.id, "starboard_min") is not None:
+            await ctx.send_help(self.starboard)
+        else:
+            await ctx.send("Starboard is not setup in this guild")
 
     @commands.has_permissions(administrator=True)
-    @commands.command(name="setup_starboard")
-    async def setup_starboard(self, ctx, channel: commands.TextChannelConverter, min_stars):
-        """Setup starboard. Usage: setup_starboard #channel min_stars"""
-        self.guild_data[str(ctx.guild.id)]["starboard_id"] = str(channel.id)
-        self.guild_data[str(ctx.guild.id)]["starboard_min"] = min_stars
+    @starboard.command(name="setup")
+    async def setup(self, ctx, channel: commands.TextChannelConverter, min_stars):
+        """Setup starboard for a guild."""
+        self.bot.guild_data_update(ctx.guild.id, {"starboard_id": str(channel.id)})
+        self.bot.guild_data_update(ctx.guild.id, {"starboard_min": min_stars})
         # Array is used for storing message ids of starred messages
-        self.guild_data[str(ctx.guild.id)]["starboard_messages"] = []
-        self.BotHelper.update_guild_data()
+        self.bot.guild_data_update(ctx.guild.id, {"starboard_messages": []}, append=False)
 
         await ctx.send("Starboard Setup")
 
-    @setup_starboard.error
-    async def setup_starboard_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send(f'Usage: {self.BotHelper.get_guild_data()[str(ctx.guild.id)]["prefix"]}setup_starboard #channel min_stars')
+    @starboard.command(name="min")
+    async def _min(self, ctx):
+        min_stars = self.bot.get_guild_data(ctx.guild.id, key="starboard_min")
+        if min_stars is not None:
+            await ctx.send(f'Minimum Stars to get added to Starboard: {min_stars}')
+        else:
+            await ctx.send("Starboard not setup in this guild.")
+
+    @starboard.command(name="channel")
+    async def _channel(self, ctx):
+        channel_id = self.bot.get_guild_data(ctx.guild.id, key="starboard_id")
+        if channel_id is not None:
+            await ctx.send(f"Starboard Channel: <#{channel_id}>")
+        else:
+            await ctx.send("Starboard not setup in this guild.")
 
 
 def setup(bot):
-    bot.add_cog(StarboardCog(bot))
+    bot.add_cog(Starboard(bot))
