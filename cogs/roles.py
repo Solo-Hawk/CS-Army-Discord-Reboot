@@ -50,7 +50,12 @@ class Roles(commands.Cog):
                             break
 
     @commands.has_permissions(administrator=True)
-    @commands.command(name="add_auto_role_message")
+    @commands.group(invoke_without_command=True)
+    async def autorole(self, ctx):
+        await ctx.send_help(self.autorole)
+
+    @commands.has_permissions(administrator=True)
+    @autorole.command(name="add")
     async def add_auto_role_message(self, ctx, channel: commands.TextChannelConverter):
         """Use this command to setup an auto role message"""
         messages = [ctx.message, await ctx.send("Send the message for the auto-role")]
@@ -85,7 +90,7 @@ class Roles(commands.Cog):
             await message.delete()
 
     @commands.has_permissions(administrator=True)
-    @commands.command(name="list_auto_role_messages")
+    @autorole.command(name="list")
     async def list_auto_role_message(self, ctx):
         if not self.bot.get_guild_data(ctx.guild.id, key="auto_role_messages"):
             await ctx.send("No auto-role messages setup")
@@ -102,7 +107,7 @@ class Roles(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.has_permissions(administrator=True)
-    @commands.command(name="delete_auto_role_message")
+    @autorole.command(name="delete")
     async def delete_auto_role_message(self, ctx, message_id):
         #  Change to use converter
         guild_data = self.bot.guild_data
