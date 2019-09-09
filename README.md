@@ -16,21 +16,17 @@ The bot repo isn't fully set up to be effective with people forking just yet, bu
 
 ## Task List
 
-+ ERROR HANDLING  
-+ Add custom help commands
-+ Change more plain text messages to embeds  
-+ Add Modules for more functionality    
-    - <del>Starboard</del>      
-    - <del>Auto-Assign Roles Message</del>
-    - Moderation (Kick, Ban, etc)  
-    - <del>Welcome Message</del>
-    - Improved Suggestions  
-    - Votes  
-    - Some sort of logging?
-    - Server Stats
-+ Refactor Files and Variables, make naming clear
-+ Update to use a database instead of a json file
 
-## Other Notes
+[x] - Deploy basic build of MDB
 
-The folder core/ contains a guild_data.json, config.json and a token.txt 
+[x] - Deploy basic build of CS Army Bot
+
+[x] - Make better branch names (Development and Deployment look too similar when I'm tired)
+
+[ ] - Refactor Files and Variables, make naming clear
+
+[ ] - Commenting and sorting WIP modules
+
+[ ] - Building module template
+
+[ ] - Bot support multi-server
